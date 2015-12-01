@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "kom.test.grpc";
+option java_outer_classname = "NetMessageProto";
+
+service Net {
+    rpc OpenStream(stream NetMessage) returns (stream NetMessage) {}
+}
+
+message NetMessage {
+    NetMessageType type = 1;
+    oneof body {
+        NetMessageConnect msgConnect = 2;
+        NetMessageDisconnect msgDisconnect = 3;
+    }
+}
+
+enum NetMessageType {
+    NET_CONNECT = 0;
+    NET_DISCONNECT = 1;
+}
+
+message NetMessageConnect {
+
+}
+
+message NetMessageDisconnect {
+
+}
