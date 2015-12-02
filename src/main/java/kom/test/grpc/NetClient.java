@@ -4,7 +4,11 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import kom.test.grpc.NetGrpc.NetStub;
+import rx.Observable;
 import rx.Observer;
+import rx.functions.Action1;
+import rx.subjects.ReplaySubject;
+import rx.subjects.Subject;
 
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -34,27 +38,19 @@ public class NetClient {
         final ObserverProxy<NetMessage> clientObserver = new ObserverProxy<NetMessage>();
         final StreamObserver<NetMessage> serverObserver = asynkStub.openStream(clientObserver);
 
-        Observer<NetMessage> rxObserver = new Observer<NetMessage>() {
-            @Override
-            public void onNext(NetMessage message) {
-                log.info("body case:" + message.getBodyCase().getNumber());
-                serverObserver.onCompleted();
-            }
+        ReplaySubject<NetMessage> subject = ReplaySubject.create();
 
-            @Override
-            public void onCompleted() {
+        clientObserver.setObserver(subject);
 
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-        };
-
-
-
-        clientObserver.setObserver(rxObserver);
+        subject
+                .filter(message -> { return message.getBodyCase().getNumber() == NetMessage.COMMAND_FIELD_NUMBER; })
+                .subscribe(new Action1<NetMessage>() {
+                    @Override
+                    public void call(NetMessage message) {
+                        log.info("body case:" + message.getBodyCase().getNumber());
+                        serverObserver.onCompleted();
+                    }
+                });
 
         NetMessage.Connect msgBody = NetMessage.Connect.newBuilder().build();
         NetMessage netMessage = NetMessage.newBuilder().setMsgConnect(msgBody).build();
