@@ -14,15 +14,35 @@ public final class NetMessageProto {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_NetMessage_fieldAccessorTable;
   static com.google.protobuf.Descriptors.Descriptor
-    internal_static_NetMessageConnect_descriptor;
+    internal_static_NetMessage_Connect_descriptor;
   static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_NetMessageConnect_fieldAccessorTable;
+      internal_static_NetMessage_Connect_fieldAccessorTable;
   static com.google.protobuf.Descriptors.Descriptor
-    internal_static_NetMessageDisconnect_descriptor;
+    internal_static_NetMessage_Disconnect_descriptor;
   static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_NetMessageDisconnect_fieldAccessorTable;
+      internal_static_NetMessage_Disconnect_fieldAccessorTable;
+  static com.google.protobuf.Descriptors.Descriptor
+    internal_static_NetMessage_ObjSpawn_descriptor;
+  static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_NetMessage_ObjSpawn_fieldAccessorTable;
+  static com.google.protobuf.Descriptors.Descriptor
+    internal_static_NetMessage_ObjDestroy_descriptor;
+  static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_NetMessage_ObjDestroy_fieldAccessorTable;
+  static com.google.protobuf.Descriptors.Descriptor
+    internal_static_NetMessage_ObjUpdate_descriptor;
+  static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_NetMessage_ObjUpdate_fieldAccessorTable;
+  static com.google.protobuf.Descriptors.Descriptor
+    internal_static_NetMessage_Command_descriptor;
+  static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_NetMessage_Command_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -32,15 +52,18 @@ public final class NetMessageProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\021net_message.proto\"\215\001\n\nNetMessage\022\035\n\004ty" +
-      "pe\030\001 \001(\0162\017.NetMessageType\022(\n\nmsgConnect\030" +
-      "\002 \001(\0132\022.NetMessageConnectH\000\022.\n\rmsgDiscon" +
-      "nect\030\003 \001(\0132\025.NetMessageDisconnectH\000B\006\n\004b" +
-      "ody\"\023\n\021NetMessageConnect\"\026\n\024NetMessageDi" +
-      "sconnect*5\n\016NetMessageType\022\017\n\013NET_CONNEC" +
-      "T\020\000\022\022\n\016NET_DISCONNECT\020\00123\n\003Net\022,\n\nOpenSt" +
-      "ream\022\013.NetMessage\032\013.NetMessage\"\000(\0010\001B\"\n\r" +
-      "kom.test.grpcB\017NetMessageProtoP\001b\006proto3"
+      "\n\021net_message.proto\"\347\002\n\nNetMessage\022)\n\nms" +
+      "gConnect\030\001 \001(\0132\023.NetMessage.ConnectH\000\022/\n" +
+      "\rmsgDisconnect\030\002 \001(\0132\026.NetMessage.Discon" +
+      "nectH\000\022(\n\010objSpawn\030\003 \001(\0132\024.NetMessage.Ob" +
+      "jSpawnH\000\022,\n\nobjDestroy\030\004 \001(\0132\026.NetMessag" +
+      "e.ObjDestroyH\000\022*\n\tobjUpdate\030\005 \001(\0132\025.NetM" +
+      "essage.ObjUpdateH\000\022&\n\007command\030\006 \001(\0132\023.Ne" +
+      "tMessage.CommandH\000\032\t\n\007Connect\032\014\n\nDisconn" +
+      "ect\032\n\n\010ObjSpawn\032\014\n\nObjDestroy\032\013\n\tObjUpda" +
+      "te\032\t\n\007CommandB\006\n\004body23\n\003Net\022,\n\nOpenStre",
+      "am\022\013.NetMessage\032\013.NetMessage\"\000(\0010\001B\"\n\rko" +
+      "m.test.grpcB\017NetMessageProtoP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -59,18 +82,42 @@ public final class NetMessageProto {
     internal_static_NetMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_NetMessage_descriptor,
-        new java.lang.String[] { "Type", "MsgConnect", "MsgDisconnect", "Body", });
-    internal_static_NetMessageConnect_descriptor =
-      getDescriptor().getMessageTypes().get(1);
-    internal_static_NetMessageConnect_fieldAccessorTable = new
+        new java.lang.String[] { "MsgConnect", "MsgDisconnect", "ObjSpawn", "ObjDestroy", "ObjUpdate", "Command", "Body", });
+    internal_static_NetMessage_Connect_descriptor =
+      internal_static_NetMessage_descriptor.getNestedTypes().get(0);
+    internal_static_NetMessage_Connect_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_NetMessageConnect_descriptor,
+        internal_static_NetMessage_Connect_descriptor,
         new java.lang.String[] { });
-    internal_static_NetMessageDisconnect_descriptor =
-      getDescriptor().getMessageTypes().get(2);
-    internal_static_NetMessageDisconnect_fieldAccessorTable = new
+    internal_static_NetMessage_Disconnect_descriptor =
+      internal_static_NetMessage_descriptor.getNestedTypes().get(1);
+    internal_static_NetMessage_Disconnect_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_NetMessageDisconnect_descriptor,
+        internal_static_NetMessage_Disconnect_descriptor,
+        new java.lang.String[] { });
+    internal_static_NetMessage_ObjSpawn_descriptor =
+      internal_static_NetMessage_descriptor.getNestedTypes().get(2);
+    internal_static_NetMessage_ObjSpawn_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_NetMessage_ObjSpawn_descriptor,
+        new java.lang.String[] { });
+    internal_static_NetMessage_ObjDestroy_descriptor =
+      internal_static_NetMessage_descriptor.getNestedTypes().get(3);
+    internal_static_NetMessage_ObjDestroy_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_NetMessage_ObjDestroy_descriptor,
+        new java.lang.String[] { });
+    internal_static_NetMessage_ObjUpdate_descriptor =
+      internal_static_NetMessage_descriptor.getNestedTypes().get(4);
+    internal_static_NetMessage_ObjUpdate_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_NetMessage_ObjUpdate_descriptor,
+        new java.lang.String[] { });
+    internal_static_NetMessage_Command_descriptor =
+      internal_static_NetMessage_descriptor.getNestedTypes().get(5);
+    internal_static_NetMessage_Command_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_NetMessage_Command_descriptor,
         new java.lang.String[] { });
   }
 

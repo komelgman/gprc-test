@@ -3,3 +3,4 @@
 /grpc.iml
 /build
 /*.iml
+/src/generated

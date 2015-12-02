@@ -8,31 +8,58 @@ public interface NetMessageOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional .NetMessageType type = 1;</code>
+   * <code>optional .NetMessage.Connect msgConnect = 1;</code>
    */
-  int getTypeValue();
+  kom.test.grpc.NetMessage.Connect getMsgConnect();
   /**
-   * <code>optional .NetMessageType type = 1;</code>
+   * <code>optional .NetMessage.Connect msgConnect = 1;</code>
    */
-  kom.test.grpc.NetMessageType getType();
+  kom.test.grpc.NetMessage.ConnectOrBuilder getMsgConnectOrBuilder();
 
   /**
-   * <code>optional .NetMessageConnect msgConnect = 2;</code>
+   * <code>optional .NetMessage.Disconnect msgDisconnect = 2;</code>
    */
-  kom.test.grpc.NetMessageConnect getMsgConnect();
+  kom.test.grpc.NetMessage.Disconnect getMsgDisconnect();
   /**
-   * <code>optional .NetMessageConnect msgConnect = 2;</code>
+   * <code>optional .NetMessage.Disconnect msgDisconnect = 2;</code>
    */
-  kom.test.grpc.NetMessageConnectOrBuilder getMsgConnectOrBuilder();
+  kom.test.grpc.NetMessage.DisconnectOrBuilder getMsgDisconnectOrBuilder();
 
   /**
-   * <code>optional .NetMessageDisconnect msgDisconnect = 3;</code>
+   * <code>optional .NetMessage.ObjSpawn objSpawn = 3;</code>
    */
-  kom.test.grpc.NetMessageDisconnect getMsgDisconnect();
+  kom.test.grpc.NetMessage.ObjSpawn getObjSpawn();
   /**
-   * <code>optional .NetMessageDisconnect msgDisconnect = 3;</code>
+   * <code>optional .NetMessage.ObjSpawn objSpawn = 3;</code>
    */
-  kom.test.grpc.NetMessageDisconnectOrBuilder getMsgDisconnectOrBuilder();
+  kom.test.grpc.NetMessage.ObjSpawnOrBuilder getObjSpawnOrBuilder();
+
+  /**
+   * <code>optional .NetMessage.ObjDestroy objDestroy = 4;</code>
+   */
+  kom.test.grpc.NetMessage.ObjDestroy getObjDestroy();
+  /**
+   * <code>optional .NetMessage.ObjDestroy objDestroy = 4;</code>
+   */
+  kom.test.grpc.NetMessage.ObjDestroyOrBuilder getObjDestroyOrBuilder();
+
+  /**
+   * <code>optional .NetMessage.ObjUpdate objUpdate = 5;</code>
+   */
+  kom.test.grpc.NetMessage.ObjUpdate getObjUpdate();
+  /**
+   * <code>optional .NetMessage.ObjUpdate objUpdate = 5;</code>
+   */
+  kom.test.grpc.NetMessage.ObjUpdateOrBuilder getObjUpdateOrBuilder();
+
+  /**
+   * <code>optional .NetMessage.Command command = 6;</code>
+   */
+  kom.test.grpc.NetMessage.Command getCommand();
+  /**
+   * <code>optional .NetMessage.Command command = 6;</code>
+   */
+  kom.test.grpc.NetMessage.CommandOrBuilder getCommandOrBuilder();
 
   public kom.test.grpc.NetMessage.BodyCase getBodyCase();
 }

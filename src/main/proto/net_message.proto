@@ -9,22 +9,30 @@ service Net {
 }
 
 message NetMessage {
-    NetMessageType type = 1;
     oneof body {
-        NetMessageConnect msgConnect = 2;
-        NetMessageDisconnect msgDisconnect = 3;
+        Connect msgConnect = 1;
+        Disconnect msgDisconnect = 2;
+        ObjSpawn objSpawn = 3;
+        ObjDestroy objDestroy = 4;
+        ObjUpdate objUpdate = 5;
+        Command command = 6;
     }
-}
 
-enum NetMessageType {
-    NET_CONNECT = 0;
-    NET_DISCONNECT = 1;
-}
+    message Connect {
+    }
 
-message NetMessageConnect {
+    message Disconnect {
+    }
 
-}
+    message ObjSpawn {
+    }
 
-message NetMessageDisconnect {
+    message ObjDestroy {
+    }
 
+    message ObjUpdate {
+    }
+
+    message Command {
+    }
 }
