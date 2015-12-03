@@ -5,10 +5,7 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import kom.test.grpc.NetGrpc.NetStub;
 import rx.Observable;
-import rx.Observer;
-import rx.functions.Action1;
-import rx.subjects.ReplaySubject;
-import rx.subjects.Subject;
+import rx.subjects.PublishSubject;
 
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -35,26 +32,65 @@ public class NetClient {
     }
 
     private void test() {
-        final ObserverProxy<NetMessage> clientObserver = new ObserverProxy<NetMessage>();
-        final StreamObserver<NetMessage> serverObserver = asynkStub.openStream(clientObserver);
+        PublishSubject<NetMessage> subject = PublishSubject.create();
+        final StreamObserver<NetMessage> serverObserver = asynkStub.openStream(new StreamObserver<NetMessage>() {
+            @Override
+            public void onNext(NetMessage netMessage) {
+                subject.onNext(netMessage);
+            }
 
-        ReplaySubject<NetMessage> subject = ReplaySubject.create();
+            @Override
+            public void onError(Throwable throwable) {
+                subject.onError(throwable);
+            }
 
-        clientObserver.setObserver(subject);
+            @Override
+            public void onCompleted() {
+                subject.onCompleted();
+            }
+        });
 
         subject
-                .filter(message -> { return message.getBodyCase().getNumber() == NetMessage.COMMAND_FIELD_NUMBER; })
-                .subscribe(new Action1<NetMessage>() {
-                    @Override
-                    public void call(NetMessage message) {
-                        log.info("body case:" + message.getBodyCase().getNumber());
-                        serverObserver.onCompleted();
+                .subscribe(netMessage -> {
+                    switch (netMessage.getBodyCase().getNumber()) {
+                        case NetMessage.COMMAND_FIELD_NUMBER:
+                            log.info("command:" + netMessage.getBodyCase().getNumber());
+                            // someCodeRun(netMessage.getCommand());
+                            serverObserver.onCompleted();
+                            break;
+                        default:
+                            log.info("unknown:" + netMessage.getBodyCase().getNumber());
                     }
+                });
+
+        subject
+                .filter(message -> message.getBodyCase().getNumber() == NetMessage.COMMAND_FIELD_NUMBER)
+                .map(netMessage -> netMessage.getCommand())
+                .subscribe(command -> {
+                    log.info("obj:" + command.getClass());
                 });
 
         NetMessage.Connect msgBody = NetMessage.Connect.newBuilder().build();
         NetMessage netMessage = NetMessage.newBuilder().setMsgConnect(msgBody).build();
         serverObserver.onNext(netMessage);
+    }
+
+    public class NetConnection {
+        private final StreamObserver<NetMessage> remoteObserver;
+        private final PublishSubject<NetMessage> localSubject;
+
+        public NetConnection(StreamObserver<NetMessage> remoteObserver, PublishSubject<NetMessage> localSubject) {
+            this.remoteObserver = remoteObserver;
+            this.localSubject = localSubject;
+        }
+
+        public void send(NetMessage message) {
+            remoteObserver.onNext(message);
+        }
+
+        public Observable<NetMessage> asObservable() {
+            return localSubject;
+        }
     }
 
     public boolean testConnection() {
