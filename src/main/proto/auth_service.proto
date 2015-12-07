@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "kom.test.grpc.auth";
+option java_outer_classname = "AuthProto";
+
+service AuthService {
+    rpc SignUp(SignUpParams) returns (SignUpResult) {}
+    rpc SignIn(SignInParams) returns (SignInResult) {}
+    rpc Logout(LogoutParams) returns (LogoutResult) {}
+    rpc VerifyToken(VerifyTokenParams) returns (VerifyTokenResult) {}
+}
+
+message SignUpParams {
+
+}
+
+message SignUpResult {
+
+}
+
+message SignInParams {
+
+}
+
+message SignInResult {
+
+}
+
+message LogoutParams {
+
+}
+
+message LogoutResult {
+
+}
+
+message VerifyTokenParams {
+
+}
+
+message VerifyTokenResult {
+
+}
