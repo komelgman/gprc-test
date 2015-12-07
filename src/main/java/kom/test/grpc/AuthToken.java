@@ -3,13 +3,13 @@ package kom.test.grpc;
 /**
  * Created by Sergey on 06.12.2015
  */
-public class Test {
+public class AuthToken {
     private static final ThreadLocal<String> AUTH_TOKEN = new ThreadLocal<>();
 
     /**
      * Constructor.
      */
-    private Test() { }
+    private AuthToken() { }
 
     /**
      * Sets the user ID.

@@ -7,5 +7,5 @@ import io.grpc.Metadata;
  */
 public class AuthConstants {
     public final static Metadata.Key<String> USER_TOKEN_HEADER =
-            Metadata.Key.of("user-token", Metadata.ASCII_STRING_MARSHALLER);
+            Metadata.Key.of("Authorization", Metadata.ASCII_STRING_MARSHALLER);
 }

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static io.grpc.ServerInterceptors.intercept;
 import static kom.test.grpc.ServiceMessage.CHATMESSAGE_FIELD_NUMBER;
 
 /**
@@ -27,7 +28,7 @@ public class NetServer {
     public void start() throws IOException {
         server = ServerBuilder.forPort(port)
                 //.addService(NetGrpc.bindService(new NetService()))
-                .addService(ServerInterceptors.intercept(NetGrpc.bindService(new NetService()), new AuthServerInterceptor()))
+                .addService(intercept(NetGrpc.bindService(new NetService()), new AuthServerInterceptor()))
                 .build()
                 .start();
 
@@ -66,17 +67,15 @@ public class NetServer {
     private class NetService implements NetGrpc.Net {
         @Override
         public StreamObserver<ServiceMessage> serviceBus(final StreamObserver<ServiceMessage> clientObserver) {
-            log.info("test: " + Test.get());
+            log.info("test: " + AuthToken.get());
 
             return new StreamObserver<ServiceMessage>() {
-                private String clientName = null;
-
                 @Override
                 public void onNext(ServiceMessage message) {
-                    log.info("body case:" + message.getBodyCase().getNumber());
-
                     switch (message.getBodyCase().getNumber()) {
                         case CHATMESSAGE_FIELD_NUMBER:
+                            break;
+                        case ServiceMessage.COMMAND_FIELD_NUMBER:
                             break;
                         default:
                     }
@@ -84,10 +83,6 @@ public class NetServer {
                     ServiceMessage.Command msgBody = ServiceMessage.Command.newBuilder().build();
                     ServiceMessage serviceMessage = ServiceMessage.newBuilder().setCommand(msgBody).build();
                     clientObserver.onNext(serviceMessage);
-                }
-
-                private boolean wasInit() {
-                    return clientName != null;
                 }
 
                 @Override
