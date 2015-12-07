@@ -1,10 +1,10 @@
 package kom.test.grpc;
 
+import io.grpc.ClientInterceptors;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import kom.test.grpc.NetGrpc.NetStub;
-import rx.Observable;
 import rx.subjects.PublishSubject;
 
 import java.util.concurrent.TimeUnit;
@@ -24,7 +24,7 @@ public class NetClient {
                 .usePlaintext(true) // debug
                 .build();
 
-        asynkStub = NetGrpc.newStub(channel);
+        asynkStub = NetGrpc.newStub(ClientInterceptors.intercept(channel, new AuthClientInterceptor()));
     }
 
     public void shutdown() throws InterruptedException {
@@ -32,28 +32,13 @@ public class NetClient {
     }
 
     private void test() {
-        PublishSubject<NetMessage> subject = PublishSubject.create();
-        final StreamObserver<NetMessage> serverObserver = asynkStub.openStream(new StreamObserver<NetMessage>() {
-            @Override
-            public void onNext(NetMessage netMessage) {
-                subject.onNext(netMessage);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                subject.onError(throwable);
-            }
-
-            @Override
-            public void onCompleted() {
-                subject.onCompleted();
-            }
-        });
+        PublishSubject<ServiceMessage> subject = PublishSubject.create();
+        final StreamObserver<ServiceMessage> serverObserver = asynkStub.serviceBus(new ObserverProxy<>(subject));
 
         subject
                 .subscribe(netMessage -> {
                     switch (netMessage.getBodyCase().getNumber()) {
-                        case NetMessage.COMMAND_FIELD_NUMBER:
+                        case ServiceMessage.COMMAND_FIELD_NUMBER:
                             log.info("command:" + netMessage.getBodyCase().getNumber());
                             // someCodeRun(netMessage.getCommand());
                             serverObserver.onCompleted();
@@ -64,37 +49,15 @@ public class NetClient {
                 });
 
         subject
-                .filter(message -> message.getBodyCase().getNumber() == NetMessage.COMMAND_FIELD_NUMBER)
+                .filter(message -> message.getBodyCase().getNumber() == ServiceMessage.COMMAND_FIELD_NUMBER)
                 .map(netMessage -> netMessage.getCommand())
                 .subscribe(command -> {
                     log.info("obj:" + command.getClass());
                 });
 
-        NetMessage.Connect msgBody = NetMessage.Connect.newBuilder().build();
-        NetMessage netMessage = NetMessage.newBuilder().setMsgConnect(msgBody).build();
-        serverObserver.onNext(netMessage);
-    }
-
-    public class NetConnection {
-        private final StreamObserver<NetMessage> remoteObserver;
-        private final PublishSubject<NetMessage> localSubject;
-
-        public NetConnection(StreamObserver<NetMessage> remoteObserver, PublishSubject<NetMessage> localSubject) {
-            this.remoteObserver = remoteObserver;
-            this.localSubject = localSubject;
-        }
-
-        public void send(NetMessage message) {
-            remoteObserver.onNext(message);
-        }
-
-        public Observable<NetMessage> asObservable() {
-            return localSubject;
-        }
-    }
-
-    public boolean testConnection() {
-        return false;
+        ServiceMessage.Command command = ServiceMessage.Command.newBuilder().build();
+        ServiceMessage message = ServiceMessage.newBuilder().setCommand(command).build();
+        serverObserver.onNext(message);
     }
 
     public static void main(String ... args) throws Exception {

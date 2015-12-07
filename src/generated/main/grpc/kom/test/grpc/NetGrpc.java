@@ -22,14 +22,14 @@ public class NetGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   @io.grpc.ExperimentalApi
-  public static final io.grpc.MethodDescriptor<kom.test.grpc.NetMessage,
-      kom.test.grpc.NetMessage> METHOD_OPEN_STREAM =
+  public static final io.grpc.MethodDescriptor<kom.test.grpc.ServiceMessage,
+      kom.test.grpc.ServiceMessage> METHOD_SERVICE_BUS =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING,
           generateFullMethodName(
-              "Net", "OpenStream"),
-          io.grpc.protobuf.ProtoUtils.marshaller(kom.test.grpc.NetMessage.getDefaultInstance()),
-          io.grpc.protobuf.ProtoUtils.marshaller(kom.test.grpc.NetMessage.getDefaultInstance()));
+              "Net", "ServiceBus"),
+          io.grpc.protobuf.ProtoUtils.marshaller(kom.test.grpc.ServiceMessage.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(kom.test.grpc.ServiceMessage.getDefaultInstance()));
 
   public static NetStub newStub(io.grpc.Channel channel) {
     return new NetStub(channel);
@@ -47,8 +47,8 @@ public class NetGrpc {
 
   public static interface Net {
 
-    public io.grpc.stub.StreamObserver<kom.test.grpc.NetMessage> openStream(
-        io.grpc.stub.StreamObserver<kom.test.grpc.NetMessage> responseObserver);
+    public io.grpc.stub.StreamObserver<kom.test.grpc.ServiceMessage> serviceBus(
+        io.grpc.stub.StreamObserver<kom.test.grpc.ServiceMessage> responseObserver);
   }
 
   public static interface NetBlockingClient {
@@ -75,10 +75,10 @@ public class NetGrpc {
     }
 
     @java.lang.Override
-    public io.grpc.stub.StreamObserver<kom.test.grpc.NetMessage> openStream(
-        io.grpc.stub.StreamObserver<kom.test.grpc.NetMessage> responseObserver) {
+    public io.grpc.stub.StreamObserver<kom.test.grpc.ServiceMessage> serviceBus(
+        io.grpc.stub.StreamObserver<kom.test.grpc.ServiceMessage> responseObserver) {
       return asyncBidiStreamingCall(
-          getChannel().newCall(METHOD_OPEN_STREAM, getCallOptions()), responseObserver);
+          getChannel().newCall(METHOD_SERVICE_BUS, getCallOptions()), responseObserver);
     }
   }
 
@@ -122,15 +122,15 @@ public class NetGrpc {
       final Net serviceImpl) {
     return io.grpc.ServerServiceDefinition.builder(SERVICE_NAME)
       .addMethod(
-        METHOD_OPEN_STREAM,
+        METHOD_SERVICE_BUS,
         asyncBidiStreamingCall(
           new io.grpc.stub.ServerCalls.BidiStreamingMethod<
-              kom.test.grpc.NetMessage,
-              kom.test.grpc.NetMessage>() {
+              kom.test.grpc.ServiceMessage,
+              kom.test.grpc.ServiceMessage>() {
             @java.lang.Override
-            public io.grpc.stub.StreamObserver<kom.test.grpc.NetMessage> invoke(
-                io.grpc.stub.StreamObserver<kom.test.grpc.NetMessage> responseObserver) {
-              return serviceImpl.openStream(responseObserver);
+            public io.grpc.stub.StreamObserver<kom.test.grpc.ServiceMessage> invoke(
+                io.grpc.stub.StreamObserver<kom.test.grpc.ServiceMessage> responseObserver) {
+              return serviceImpl.serviceBus(responseObserver);
             }
           })).build();
   }

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "kom.test.grpc";
+option java_outer_classname = "NetProto";
+
+service Net {
+    rpc ServiceBus(stream ServiceMessage) returns (stream ServiceMessage) {}
+}
+
+message ServiceMessage {
+    oneof body {
+        ObjSpawn objSpawn = 1;
+        ObjDestroy objDestroy = 2;
+        ObjUpdate objUpdate = 3;
+        Command command = 4;
+        ChatMessage chatMessage = 5;
+    }
+
+    message ObjSpawn {
+    }
+
+    message ObjDestroy {
+    }
+
+    message ObjUpdate {
+    }
+
+    message Command {
+    }
+
+    message ChatMessage {
+
+    }
+}

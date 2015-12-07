@@ -1,39 +1,31 @@
 package kom.test.grpc;
 
 import io.grpc.stub.StreamObserver;
-import rx.Observer;
-
-import java.util.concurrent.atomic.AtomicReference;
+import rx.subjects.PublishSubject;
 
 /**
- * Created by syungman on 02.12.2015
+ * Created by Sergey on 03.12.2015
  */
 public class ObserverProxy<V> implements StreamObserver<V> {
-    private AtomicReference<Observer<V>> observer = new AtomicReference<Observer<V>>(null);
+
+    private final PublishSubject<V> subject;
+
+    public ObserverProxy(PublishSubject<V> subject) {
+        this.subject = subject;
+    }
 
     @Override
     public void onNext(V v) {
-        Observer<V> rxObserver = observer.get();
-        if (rxObserver != null)
-            rxObserver.onNext(v);
+        subject.onNext(v);
     }
 
     @Override
     public void onError(Throwable throwable) {
-        Observer<V> rxObserver = observer.get();
-        if (rxObserver != null)
-            rxObserver.onError(throwable);
+        subject.onError(throwable);
     }
 
     @Override
     public void onCompleted() {
-        Observer<V> rxObserver = observer.get();
-        if (rxObserver != null)
-            rxObserver.onCompleted();
-    }
-
-    public void setObserver(Observer<V> rxObserver) {
-        if (!observer.compareAndSet(null, rxObserver))
-            throw new IllegalStateException("Proxy was initialized before");
+        subject.onCompleted();
     }
 }

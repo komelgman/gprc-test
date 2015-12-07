@@ -1,17 +1,15 @@
 package kom.test.grpc;
 
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.ServerInterceptors;
 import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static kom.test.grpc.ServiceMessage.CHATMESSAGE_FIELD_NUMBER;
 
 /**
  * Created by syungman on 02.12.2015
@@ -26,25 +24,24 @@ public class NetServer {
         this.port = port;
     }
 
-    /** Start serving requests. */
     public void start() throws IOException {
         server = ServerBuilder.forPort(port)
-                .addService(NetGrpc.bindService(new NetService()))
+                //.addService(NetGrpc.bindService(new NetService()))
+                .addService(ServerInterceptors.intercept(NetGrpc.bindService(new NetService()), new AuthServerInterceptor()))
                 .build()
                 .start();
-        log.info("Server started, listening on " + port);
+
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                // Use stderr here since the logger may has been reset by its JVM shutdown hook.
-                System.err.println("*** shutting down gRPC server since JVM is shutting down");
                 NetServer.this.stop();
-                System.err.println("*** server shut down");
             }
         });
     }
 
-    /** Stop serving requests and shutdown resources. */
+    /**
+     * Stop serving requests and shutdown resources.
+     */
     public void stop() {
         if (server != null) {
             server.shutdown();
@@ -68,20 +65,34 @@ public class NetServer {
 
     private class NetService implements NetGrpc.Net {
         @Override
-        public StreamObserver<NetMessage> openStream(final StreamObserver<NetMessage> clientObserver) {
-            return new StreamObserver<NetMessage>() {
+        public StreamObserver<ServiceMessage> serviceBus(final StreamObserver<ServiceMessage> clientObserver) {
+            log.info("test: " + Test.get());
+
+            return new StreamObserver<ServiceMessage>() {
+                private String clientName = null;
+
                 @Override
-                public void onNext(NetMessage message) {
+                public void onNext(ServiceMessage message) {
                     log.info("body case:" + message.getBodyCase().getNumber());
 
-                    NetMessage.Command msgBody = NetMessage.Command.newBuilder().build();
-                    NetMessage netMessage = NetMessage.newBuilder().setCommand(msgBody).build();
-                    clientObserver.onNext(netMessage);
+                    switch (message.getBodyCase().getNumber()) {
+                        case CHATMESSAGE_FIELD_NUMBER:
+                            break;
+                        default:
+                    }
+
+                    ServiceMessage.Command msgBody = ServiceMessage.Command.newBuilder().build();
+                    ServiceMessage serviceMessage = ServiceMessage.newBuilder().setCommand(msgBody).build();
+                    clientObserver.onNext(serviceMessage);
+                }
+
+                private boolean wasInit() {
+                    return clientName != null;
                 }
 
                 @Override
                 public void onError(Throwable t) {
-                    log.log(Level.WARNING, "Encountered error in openStream", t);
+                    log.log(Level.WARNING, "Encountered error in serviceBus", t);
                 }
 
                 @Override
