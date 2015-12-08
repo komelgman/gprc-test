@@ -1,8 +1,6 @@
 package kom.test.grpc;
 
 import io.grpc.*;
-import io.grpc.ForwardingServerCallListener.SimpleForwardingServerCallListener;
-
 import java.util.logging.Logger;
 
 /**
@@ -21,11 +19,41 @@ public class AuthServerInterceptor implements ServerInterceptor {
 
         logger.info("header received from client:" + requestHeaders.toString());
 
-        final String token = requestHeaders.get(AuthConstants.USER_TOKEN_HEADER);
 
         try {
+            final String token = requestHeaders.get(AuthConstants.USER_TOKEN_HEADER);
             AuthToken.set(token);
-            return next.startCall(method, call, requestHeaders);
+
+            final ServerCall.Listener<ReqT> delegate = next.startCall(method, call, requestHeaders);
+
+            return new ForwardingServerCallListener<ReqT>() {
+                @Override
+                protected ServerCall.Listener<ReqT> delegate() {
+                    return delegate;
+                }
+
+                @Override
+                public void onMessage(ReqT message) {
+                    //logger.info("trace");
+                    try {
+                        AuthToken.set(token);
+                        super.onMessage(message);
+                    } finally {
+                        AuthToken.remove();
+                    }
+                }
+
+                @Override
+                public void onHalfClose() {
+                    //logger.info("trace");
+                    try {
+                        AuthToken.set(token);
+                        super.onHalfClose();
+                    } finally {
+                        AuthToken.remove();
+                    }
+                }
+            };
         } finally {
             AuthToken.remove();
         }

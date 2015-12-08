@@ -4,6 +4,10 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.ServerInterceptors;
 import io.grpc.stub.StreamObserver;
+import kom.test.grpc.ServiceMessage.Msg1;
+import kom.test.grpc.ServiceMessage.Msg2;
+import kom.test.grpc.ServiceMessage.Msg3;
+import kom.test.grpc.ServiceMessage.Msg4;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -67,22 +71,37 @@ public class NetServer {
     private class NetService implements NetGrpc.Net {
         @Override
         public StreamObserver<ServiceMessage> serviceBus(final StreamObserver<ServiceMessage> clientObserver) {
-            log.info("test: " + AuthToken.get());
+            log.info("authToken: " + AuthToken.get());
 
             return new StreamObserver<ServiceMessage>() {
                 @Override
                 public void onNext(ServiceMessage message) {
+                    //log.info("trace");
+                    //log.info("authToken: " + AuthToken.get());
+
+                    ServiceMessage serviceMessage = null;
                     switch (message.getBodyCase().getNumber()) {
-                        case CHATMESSAGE_FIELD_NUMBER:
+                        case ServiceMessage.MSG1_FIELD_NUMBER:
+                            serviceMessage = ServiceMessage.newBuilder().setMsg1(Msg1.newBuilder().build()).build();
                             break;
-                        case ServiceMessage.COMMAND_FIELD_NUMBER:
+
+                        case ServiceMessage.MSG2_FIELD_NUMBER:
+                            serviceMessage = ServiceMessage.newBuilder().setMsg2(Msg2.newBuilder().build()).build();
                             break;
+
+                        case ServiceMessage.MSG3_FIELD_NUMBER:
+                            serviceMessage = ServiceMessage.newBuilder().setMsg3(Msg3.newBuilder().build()).build();
+                            break;
+
+                        case ServiceMessage.MSG4_FIELD_NUMBER:
+                            serviceMessage = ServiceMessage.newBuilder().setMsg4(Msg4.newBuilder().build()).build();
+                            break;
+
                         default:
                     }
 
-                    ServiceMessage.Command msgBody = ServiceMessage.Command.newBuilder().build();
-                    ServiceMessage serviceMessage = ServiceMessage.newBuilder().setCommand(msgBody).build();
-                    clientObserver.onNext(serviceMessage);
+                    if (serviceMessage != null)
+                        clientObserver.onNext(serviceMessage);
                 }
 
                 @Override

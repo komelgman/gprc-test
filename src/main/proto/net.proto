@@ -15,7 +15,17 @@ message ServiceMessage {
         ObjUpdate objUpdate = 3;
         Command command = 4;
         ChatMessage chatMessage = 5;
+
+        Msg1 msg1 = 6;
+        Msg2 msg2 = 7;
+        Msg3 msg3 = 8;
+        Msg4 msg4 = 9;
     }
+
+    message Msg1 {}
+    message Msg2 {}
+    message Msg3 {}
+    message Msg4 {}
 
     message ObjSpawn {
     }

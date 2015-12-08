@@ -17,7 +17,7 @@ public class AuthClientInterceptor implements ClientInterceptor {
         return new SimpleForwardingClientCall<ReqT, RespT>(channel.newCall(methodDescriptor, callOptions)) {
             @Override
             public void start(Listener<RespT> responseListener, Metadata headers) {
-                headers.put(AuthConstants.USER_TOKEN_HEADER, "test-value");
+                headers.put(AuthConstants.USER_TOKEN_HEADER, AuthToken.get());
                 super.start(responseListener, headers);
             }
         };

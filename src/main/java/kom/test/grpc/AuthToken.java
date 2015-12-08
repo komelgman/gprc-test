@@ -5,6 +5,9 @@ package kom.test.grpc;
  */
 public class AuthToken {
     private static final ThreadLocal<String> AUTH_TOKEN = new ThreadLocal<>();
+    static {
+        AUTH_TOKEN.set("");
+    }
 
     /**
      * Constructor.
