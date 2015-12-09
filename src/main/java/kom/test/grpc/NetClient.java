@@ -74,12 +74,12 @@ public class NetClient {
                         serverObserver.onCompleted();
                 });
 
-        subject
-//                .filter(message -> message.getBodyCase().getNumber() == ServiceMessage.COMMAND_FIELD_NUMBER)
-//                .map(netMessage -> netMessage.getCommand())
-                .subscribe(message -> {
-                    //log.info("rcvdFrmSrvr:" + message.getBodyCase().name());
-                });
+//        subject
+////                .filter(message -> message.getBodyCase().getNumber() == ServiceMessage.COMMAND_FIELD_NUMBER)
+////                .map(netMessage -> netMessage.getCommand())
+//                .subscribe(message -> {
+//                    //log.info("rcvdFrmSrvr:" + message.getBodyCase().name());
+//                });
 
         ServiceMessage message = ServiceMessage.newBuilder().setMsg2(Msg2.newBuilder().build()).build();
         serverObserver.onNext(message);
@@ -88,7 +88,7 @@ public class NetClient {
     public static void main(String ... args) throws Exception {
         NetClient client = new NetClient("localhost", 2233);
         try {
-            for (int i = 1; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
                 client.test();
 
         } finally {
